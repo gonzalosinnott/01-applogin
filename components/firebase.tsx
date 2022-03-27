@@ -4,7 +4,14 @@ import * as firebase from "firebase";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-
+const firebaseConfig = {
+  apiKey: "AIzaSyBRc_lafNBicNwvGhpSECQuWsvxirsjcks",
+  authDomain: "fir-auth-9e613.firebaseapp.com",
+  projectId: "fir-auth-9e613",
+  storageBucket: "fir-auth-9e613.appspot.com",
+  messagingSenderId: "612719668723",
+  appId: "1:612719668723:web:f5b64963df2338b5c5b686"
+};
 
 // Initialize Firebase
 let app;
