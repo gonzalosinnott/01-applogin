@@ -1,8 +1,10 @@
- import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
- import React from 'react'
-import { auth } from './firebase'
+import { Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { auth } from '../database/firebase'
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import styles from '../styles/StyleHomeScreen'
+
  
  const HomeScreen = () => {
 
@@ -28,26 +30,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
     </View>
    )
  }
- const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    button: {
-      backgroundColor: '#ef7f1b',
-      width: '60%',
-      padding: 15,
-      borderRadius: 25,
-      alignItems: 'center',
-      marginTop: 80,
-    },
-    buttonText: {
-      color: 'white',
-      fontWeight: '700',
-      fontSize: 18,
-    },
- })
 
  export default HomeScreen
  
