@@ -6,17 +6,18 @@ import HideWithKeyboard from 'react-native-hide-with-keyboard'
 import { auth } from '../database/firebase'
 import styles from '../styles/StyleLoginScreen'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faUserGear, faUsersRectangle, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons'
+import { faUserGear, faUsersRectangle, faChalkboardTeacher, faTimesCircle, faKey, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import Modal from "react-native-modal";
+
 
 const LoginScreen = () => {
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false);
   const win = Dimensions.get('window');
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-
-  const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -58,20 +59,25 @@ const LoginScreen = () => {
       .catch(error => {   
         switch (error.code) {  
             case 'auth/invalid-email':
-              alert('INGRESE UN FORMATO DE MAIL VALIDO')
+              setModalVisible(true);
+              setErrorMsg('Formato de email incorrecto.');
               break;                       
             case 'auth/email-already-in-use':
-                alert('EL MAIL YA SE ENCUENTRA REGISTRADO')
-                break;                    
+              setModalVisible(true);
+              setErrorMsg('El email ingresado ya esta registrado.');
+              break;                    
             case 'auth/missing-email':
-                alert('INGRESE MAIL')
-                break;
+              setModalVisible(true);
+              setErrorMsg('Ingrese el mail.');
+              break; 
             case 'auth/internal-error':
-                alert('INGRESE CONTRASEÑA')
-                break;
+              setModalVisible(true);
+              setErrorMsg('Ingrese la contraseña.');
+              break;
             default:
-                alert(error.message)  
-                break;   
+              setModalVisible(true);
+              setErrorMsg('La contraseña debe tener mas de 6 caracteres');
+              break;   
         }
     })
   }
@@ -89,17 +95,21 @@ const LoginScreen = () => {
       .catch(error => {   
         switch (error.code) { 
             case 'auth/invalid-email':
-                alert('FORMATO DE MAIL INVALIDO')
-                break;                  
+              setModalVisible(true);
+              setErrorMsg('Formato de email incorrecto.');
+              break;                   
             case 'auth/user-not-found':
-                alert('USUARIO NO REGISTRADO')
-                break;                
+              setModalVisible(true);
+              setErrorMsg('Usuario no registrado.');
+              break;                 
             case 'auth/wrong-password':
-                alert('CONTRASEÑA INCORRECTA')
-                break;
+              setModalVisible(true);
+              setErrorMsg('Contraseña incorrecta.');
+              break;
             case 'auth/internal-error':
-                alert('INGRESE CONTRASEÑA')
-                break;
+              setModalVisible(true);
+              setErrorMsg('Ingrese contraseña.');
+              break;;
             default:
                 alert(error.message)  
                 break; 
@@ -121,20 +131,27 @@ const LoginScreen = () => {
         />
         <Text style={styles.title}>PRACTICA PROFESIONAL SUPERVISADA</Text>
         <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Contraseña"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            style={styles.input}
-            secureTextEntry
-          />
+
+          <View style={styles.input}>
+            <FontAwesomeIcon style={styles.inputImage} icon={ faEnvelope }  size={ 15 } />
+            <TextInput
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+
+          <View style={styles.input}>
+            <FontAwesomeIcon style={styles.inputImage} icon={ faKey }  size={ 15 } />
+            <TextInput
+              placeholder="Contraseña"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry
+            />
+          </View>
         </View>
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleLogin} style={styles.button}>
             <Text style={styles.buttonText}>INICIAR SESION</Text>
@@ -146,6 +163,7 @@ const LoginScreen = () => {
             <Text style={styles.buttonOutLineText}>REGISTRARSE</Text>
           </TouchableOpacity>
         </View>
+
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity onPress={onPressAdminHandler}  style={styles.buttonRole} >
             <FontAwesomeIcon icon={ faUserGear }  size={ 32 } />
@@ -160,23 +178,27 @@ const LoginScreen = () => {
             <Text style={styles.buttonText}>ALUMNOS</Text>
           </TouchableOpacity>
         </View>        
-      </View>      
+      </View>   
+
       <View style={styles.footer}>
         <HideWithKeyboard>
           <Text>
             &copy; {new Date().getFullYear()} Copyright - Gonzalo Sinnott Segura
           </Text>
         </HideWithKeyboard>
-      </View>
 
-      <View>
-        <Modal isVisible={isModalVisible}>
-          <View style={{ flex: 1 }}>
-            <Text>I am the modal content!</Text>
-          </View>
-        </Modal>
+        <View>
+          <Modal style={styles.body} isVisible={isModalVisible}>
+            <View style={styles.modalBody}>
+              <Text style={styles.modalText}>{errorMsg}</Text>
+              <TouchableOpacity onPress={toggleModal} style={styles.escapeButton}>
+                <FontAwesomeIcon icon={ faTimesCircle }  size={ 32 } />
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </View>
       </View>
-
+      
     </View>
   );
 }

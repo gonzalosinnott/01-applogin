@@ -8,11 +8,21 @@ export default StyleSheet.create({
     width: '80%',      
   },
   input: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'white',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 25,
     marginTop: 5,
+  },
+  inputImage: {
+    padding: 10,
+    margin: 5,
+    height: 25,
+    width: 25,
+    resizeMode: 'stretch',
+    alignItems: 'center',
   },
   buttonContainer: {
     width: '60%',
@@ -46,6 +56,7 @@ export default StyleSheet.create({
     marginTop: 10,
     borderColor: '#ef7f1b',
     borderWidth: 2,
+    alignItems: 'center',
   },
   buttonOutLineText: {
     color: '#ef7f1b',
@@ -68,6 +79,26 @@ export default StyleSheet.create({
     justifyContent: 'center',
     bottom: 20,
   },
+  modalBody: {
+    backgroundColor: 'white',
+    borderColor: '#ef7f1b',
+    width: '100%',
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: 'space-between',
+  },
+  modalText: {
+    flexShrink: 1,
+  },
+  escapeButton: {
+    backgroundColor: '#F85128',
+    width: '25%',
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+  }
 });
 
 
