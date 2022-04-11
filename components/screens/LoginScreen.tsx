@@ -1,7 +1,7 @@
 import { useNavigation  } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
-import { Dimensions, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import HideWithKeyboard from 'react-native-hide-with-keyboard'
 import { auth } from '../database/firebase'
 import styles from '../styles/StyleLoginScreen'
@@ -9,19 +9,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faUserGear, faUsersRectangle, faChalkboardTeacher, faTimesCircle, faKey, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import Modal from "react-native-modal";
 
-
 const LoginScreen = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalAlertVisible, setModalAlertVisible] = useState(false);
+  const [isModalSpinnerVisible, setModalSpinnerVisible] = useState(false);
+
   const win = Dimensions.get('window');
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const toggleModalAlert = () => {
+    setModalAlertVisible(!isModalAlertVisible);
   };
+
+  const toggleSpinnerAlert = () => {
+    setModalSpinnerVisible(true);
+    setTimeout(() => {
+      setModalSpinnerVisible(false);
+      setModalAlertVisible(true);
+    }, 1200);
+  };  
 
   const onPressAdminHandler = () => {
     setEmail("admin@utn.com");
@@ -44,7 +53,6 @@ const LoginScreen = () => {
         navigation.replace('Inicio')
       }
     })
-
     return unsuscribe
   }, [])
 
@@ -53,29 +61,24 @@ const LoginScreen = () => {
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
-        console.log('Registro de usuario como: ', user?.email);
-        
+        console.log('Registro de usuario como: ', user?.email);        
       })
-      .catch(error => {   
+      .catch(error => {
+        toggleSpinnerAlert();  
         switch (error.code) {  
             case 'auth/invalid-email':
-              setModalVisible(true);
               setErrorMsg('Formato de email incorrecto.');
               break;                       
             case 'auth/email-already-in-use':
-              setModalVisible(true);
               setErrorMsg('El email ingresado ya esta registrado.');
               break;                    
             case 'auth/missing-email':
-              setModalVisible(true);
               setErrorMsg('Ingrese el mail.');
               break; 
             case 'auth/internal-error':
-              setModalVisible(true);
               setErrorMsg('Ingrese la contraseña.');
               break;
             default:
-              setModalVisible(true);
               setErrorMsg('La contraseña debe tener mas de 6 caracteres');
               break;   
         }
@@ -92,22 +95,19 @@ const LoginScreen = () => {
           navigation.replace('Inicio')
         }
       })
-      .catch(error => {   
-        switch (error.code) { 
+      .catch(error => { 
+        toggleSpinnerAlert();  
+         switch (error.code) { 
             case 'auth/invalid-email':
-              setModalVisible(true);
               setErrorMsg('Formato de email incorrecto.');
               break;                   
             case 'auth/user-not-found':
-              setModalVisible(true);
               setErrorMsg('Usuario no registrado.');
               break;                 
             case 'auth/wrong-password':
-              setModalVisible(true);
               setErrorMsg('Contraseña incorrecta.');
               break;
             case 'auth/internal-error':
-              setModalVisible(true);
               setErrorMsg('Ingrese contraseña.');
               break;;
             default:
@@ -156,10 +156,7 @@ const LoginScreen = () => {
           <TouchableOpacity onPress={handleLogin} style={styles.button}>
             <Text style={styles.buttonText}>INICIAR SESION</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handelSignUp}
-            style={[styles.button, styles.buttonOutLine]}
-          >
+          <TouchableOpacity onPress={handelSignUp} style={[styles.button, styles.buttonOutLine]}>
             <Text style={styles.buttonOutLineText}>REGISTRARSE</Text>
           </TouchableOpacity>
         </View>
@@ -188,17 +185,23 @@ const LoginScreen = () => {
         </HideWithKeyboard>
 
         <View>
-          <Modal style={styles.body} isVisible={isModalVisible}>
+          <Modal style={styles.body} isVisible={isModalAlertVisible}>
             <View style={styles.modalBody}>
               <Text style={styles.modalText}>{errorMsg}</Text>
-              <TouchableOpacity onPress={toggleModal} style={styles.escapeButton}>
-                <FontAwesomeIcon icon={ faTimesCircle }  size={ 32 } />
+              <TouchableOpacity onPress={toggleModalAlert} style={styles.escapeButton}>
+                <FontAwesomeIcon icon={ faTimesCircle }  size={ 40 } />
               </TouchableOpacity>
             </View>
           </Modal>
         </View>
-      </View>
-      
+
+        <View>
+          <Modal isVisible={isModalSpinnerVisible}>
+            <ActivityIndicator size="large" color="#ef7f1b" />
+          </Modal>
+        </View>
+
+      </View>     
     </View>
   );
 }

@@ -93,7 +93,7 @@ export default StyleSheet.create({
     flexShrink: 1,
   },
   escapeButton: {
-    backgroundColor: '#F85128',
+    backgroundColor: '#ef7f1b',
     width: '25%',
     padding: 15,
     borderRadius: 25,

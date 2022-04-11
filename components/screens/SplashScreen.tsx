@@ -1,6 +1,5 @@
 import React from "react";
 import { Dimensions, ImageBackground, View } from "react-native";
-import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -12,7 +11,7 @@ export default function Splash() {
 
     setTimeout(() => {
         navigation.replace( 'Login' );
-        }, 2900);
+        }, 2800);
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
